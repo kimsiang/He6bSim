@@ -1,4 +1,4 @@
-# He6bSim
+# helium6bSim
 
 Geant4 simulation package and analysis codes for Helium 6b experiment. The simulation code is based on the musrSim
 flavor developed by physicists at PSI for muon spin rotation experiment at LEM beam line.
