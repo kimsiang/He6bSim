@@ -1,7 +1,7 @@
 #----------------------------------------------------------------------------
 # Setup the project
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
-project(musrSim)
+project(helium6bSim)
 
 #----------------------------------------------------------------------------
 # KAMIL CHANGES:
@@ -45,7 +45,7 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 libraries
 #
-add_executable(musrSim musrSim.cc ${sources} ${headers})
+add_executable(helium6bSim helium6bSim.cc ${sources} ${headers})
 ##FIND_PACKAGE( ROOT )
 #SET(ROOT_CONFIG_EXECUTABLE /home/download/Root_5.24_source/root/bin/root-config)
 ## ask root-config for the library varaibles
@@ -54,8 +54,8 @@ add_executable(musrSim musrSim.cc ${sources} ${headers})
 # OUTPUT_VARIABLE root_flags )
 ##SET(ROOT_LIBRARIES ${root_flags})
 #EchoString("Kamil ${root_flags}  Kamil")
-#target_link_libraries(musrSim ${Geant4_LIBRARIES} ${root_flags})
-target_link_libraries(musrSim ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
+#target_link_libraries(helium6bSim ${Geant4_LIBRARIES} ${root_flags})
+target_link_libraries(helium6bSim ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
 #----------------------------------------------------------------------------
 # Copy all scripts to the build directory, i.e. the directory in which we
 # build B1. This is so that we can run the executable directly because it
@@ -78,11 +78,11 @@ endforeach()
 # For internal Geant4 use - but has no effect if you build this
 # example standalone
 #
-#add_custom_target(musrSim DEPENDS musrSim)
+#add_custom_target(helium6bSim DEPENDS helium6bSim)
 
 #----------------------------------------------------------------------------
 # Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
 #
-install(TARGETS musrSim DESTINATION bin)
+install(TARGETS helium6bSim DESTINATION bin)
 
 
