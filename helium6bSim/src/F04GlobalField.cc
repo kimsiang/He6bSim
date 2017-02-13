@@ -37,6 +37,7 @@
 #include "G4SimpleHeum.hh"
 #include "G4ClassicalRK4.hh"
 #include "G4CashKarpRKF45.hh"
+#include "G4NystromRK4.hh"
 
 #include "F04GlobalField.hh"
 // #include "F04GlobalFieldOldPoints.hh"     //cks F04GlobalFieldOldPoints were introduced in order to keep the last few
@@ -48,24 +49,24 @@
 F04GlobalField* F04GlobalField::object = 0;
 
 F04GlobalField::F04GlobalField() : G4ElectroMagneticField(),
-                             minStep(0.01*CLHEP::mm), deltaChord(3.0*CLHEP::mm),
-                             deltaOneStep(0.01*CLHEP::mm), deltaIntersection(0.1*CLHEP::mm),
-                             epsMin(2.5e-7*CLHEP::mm), epsMax(0.05*CLHEP::mm),
-                             fEquation(0), fFieldManager(0), 
-                             fFieldPropagator(0), fStepper(0), fChordFinder(0)
-// F04GlobalField::F04GlobalField() : G4MagneticField(),
-//                             minStep(0.01*mm), deltaChord(3.0*mm),
-//                             deltaOneStep(0.01*mm), deltaIntersection(0.1*mm),
-//                             epsMin(2.5e-7*mm), epsMax(0.05*mm),
-//                             fEquation(0), fFieldManager(0),
-//  			     fFieldPropagator(0), fStepper(0), fChordFinder(0)
+  minStep(0.01*CLHEP::mm), deltaChord(3.0*CLHEP::mm),
+  deltaOneStep(0.01*CLHEP::mm), deltaIntersection(0.1*CLHEP::mm),
+  epsMin(2.5e-7*CLHEP::mm), epsMax(0.05*CLHEP::mm),
+  fEquation(0), fFieldManager(0), 
+  fFieldPropagator(0), fStepper(0), fChordFinder(0)
+                                   // F04GlobalField::F04GlobalField() : G4MagneticField(),
+                                   //                             minStep(0.01*mm), deltaChord(3.0*mm),
+                                   //                             deltaOneStep(0.01*mm), deltaIntersection(0.1*mm),
+                                   //                             epsMin(2.5e-7*mm), epsMax(0.05*mm),
+                                   //                             fEquation(0), fFieldManager(0),
+                                   //  			     fFieldPropagator(0), fStepper(0), fChordFinder(0)
 {
 
   fFieldMessenger = new F04FieldMessenger(this);
 
   fields = new FieldList();
 
-  fStepperType = 4 ;       // ClassicalRK4 is default stepper
+  fStepperType = 5 ;       // ClassicalRK4 is default stepper
 
   //  set object
 
@@ -112,7 +113,7 @@ void F04GlobalField::updateField()
 
   //  Get transportation, field, and propagator managers
   G4TransportationManager* fTransportManager =
-         G4TransportationManager::GetTransportationManager();
+    G4TransportationManager::GetTransportationManager();
 
   fFieldManager = GetGlobalFieldManager();
 
@@ -150,7 +151,7 @@ void F04GlobalField::updateField()
   //            " DeltaIntersection=" << deltaIntersection <<
   //            " EpsMin=" << epsMin <<
   //            " EpsMax=" << epsMax <<  G4endl;
-  
+
   fFieldManager->SetChordFinder(fChordFinder);
 
 }
@@ -168,35 +169,39 @@ void F04GlobalField::SetStepper()
   switch ( fStepperType )
   {
     case 0:
-//      fStepper = new G4ExplicitEuler( fEquation, 8 ); // no spin tracking
+      //      fStepper = new G4ExplicitEuler( fEquation, 8 ); // no spin tracking
       fStepper = new G4ExplicitEuler( fEquation, 12 ); // with spin tracking
       G4cout << "G4ExplicitEuler is called" << G4endl;
       break;
     case 1:
-//      fStepper = new G4ImplicitEuler( fEquation, 8 ); // no spin tracking
+      //      fStepper = new G4ImplicitEuler( fEquation, 8 ); // no spin tracking
       fStepper = new G4ImplicitEuler( fEquation, 12 ); // with spin tracking
       G4cout << "G4ImplicitEuler is called" << G4endl;
       break;
     case 2:
-//      fStepper = new G4SimpleRunge( fEquation, 8 ); // no spin tracking
+      //      fStepper = new G4SimpleRunge( fEquation, 8 ); // no spin tracking
       fStepper = new G4SimpleRunge( fEquation, 12 ); // with spin tracking
       G4cout << "G4SimpleRunge is called" << G4endl;
       break;
     case 3:
-//      fStepper = new G4SimpleHeum( fEquation, 8 ); // no spin tracking
+      //      fStepper = new G4SimpleHeum( fEquation, 8 ); // no spin tracking
       fStepper = new G4SimpleHeum( fEquation, 12 ); // with spin tracking
       G4cout << "G4SimpleHeum is called" << G4endl;
       break;
     case 4:
-//      fStepper = new G4ClassicalRK4( fEquation, 8 ); // no spin tracking
+      //      fStepper = new G4ClassicalRK4( fEquation, 8 ); // no spin tracking
       fStepper = new G4ClassicalRK4( fEquation, 12 ); // with spin tracking
       G4cout << "G4ClassicalRK4 (default) is called" << G4endl;
       break;
     case 5:
-//      fStepper = new G4CashKarpRKF45( fEquation, 8 ); // no spin tracking
-      fStepper = new G4CashKarpRKF45( fEquation, 12 ); // with spin tracking
+      fStepper = new G4CashKarpRKF45( fEquation, 8 ); // no spin tracking
+      //      fStepper = new G4CashKarpRKF45( fEquation, 12 ); // with spin tracking
       G4cout << "G4CashKarpRKF45 is called" << G4endl;
       break;
+//    case 6:
+//      fStepper = new G4NystromRK4( fEquation ); // no spin tracking
+//      G4cout << "G4G4NystromRK4 is called" << G4endl;
+//      break;
     default: fStepper = 0;
   }
 }
@@ -204,7 +209,7 @@ void F04GlobalField::SetStepper()
 G4FieldManager* F04GlobalField::GetGlobalFieldManager()
 {
   return G4TransportationManager::GetTransportationManager()
-                                ->GetFieldManager();
+    ->GetFieldManager();
 }
 
 void F04GlobalField::GetFieldValue(const G4double* point, G4double* field) const
@@ -227,10 +232,10 @@ void F04GlobalField::GetFieldValue(const G4double* point, G4double* field) const
   if (first) ((F04GlobalField*)this)->setupArray();   // (cast away const)
 
   for (int i=0; i<nfp; ++i) {
-      const F04ElementField* p = fp[i];
-      if (p->isInBoundingBox(point)) {
-         p->addFieldValue(point,field);
-      }
+    const F04ElementField* p = fp[i];
+    if (p->isInBoundingBox(point)) {
+      p->addFieldValue(point,field);
+    }
   }
 
   // cks  NOT SURE WHETHER THE FOLLOWING WAS STILL NEEDED, HOWEVER REMOVED NOT 
@@ -240,20 +245,20 @@ void F04GlobalField::GetFieldValue(const G4double* point, G4double* field) const
   //  if (sqrt(field[0]*field[0]+field[1]*field[1]+field[2]*field[2])<0.00001*tesla) {
   //    field[2] = 0.00001*tesla;
   //  }
-  
+
   // cks  myOldFieldPoints.StoreTheFieldPointForFutureReuse(point,field);
 }
 
 void F04GlobalField::clear()
 {
   if (fields) {
-     if (fields->size()>0) {
-        FieldList::iterator i;
-	//cks 2009_05_14 : The following line seems to cause problems (sometimes)
-	//                 See the comment in F04GlobalField::~F04GlobalField() for more details.
-	for (i=fields->begin(); i!=fields->end(); ++i)  delete *i;
-        fields->clear();
-     }
+    if (fields->size()>0) {
+      FieldList::iterator i;
+      //cks 2009_05_14 : The following line seems to cause problems (sometimes)
+      //                 See the comment in F04GlobalField::~F04GlobalField() for more details.
+      for (i=fields->begin(); i!=fields->end(); ++i)  delete *i;
+      fields->clear();
+    }
   }
 
   if (fp) delete[] fp;
@@ -325,7 +330,7 @@ void F04GlobalField::PrintFieldAtRequestedPoints() const {
     object->GetFieldValue(point,Bfi);
     //    printf ("   Magnetic Field at %f, %f, %f mm  is   B= %10.10f, %10.10f, %10.10f tesla.\n", 
     //	    point[0]/mm,point[1]/mm,point[2]/mm,Bfi[0]/tesla,Bfi[1]/tesla,Bfi[2]/tesla);
-        printf ("  Field at (%.2f, %.2f, %.2f) mm is:  B = (%5.10g, %5.10g, %5.10g) T,  E = (%0.10g, %0.10g, %0.10g) kV/mm\n",
+    printf ("  Field at (%.2f, %.2f, %.2f) mm is:  B = (%5.10g, %5.10g, %5.10g) T,  E = (%0.10g, %0.10g, %0.10g) kV/mm\n",
         point[0]/CLHEP::mm, point[1]/CLHEP::mm, point[2]/CLHEP::mm,
         Bfi[0]/CLHEP::tesla,         Bfi[1]/CLHEP::tesla,         Bfi[2]/CLHEP::tesla,
         Bfi[3]/(CLHEP::kilovolt/CLHEP::mm), Bfi[4]/(CLHEP::kilovolt/CLHEP::mm), Bfi[5]/(CLHEP::kilovolt/CLHEP::mm));
@@ -353,10 +358,10 @@ void F04GlobalField::PrintFieldAtRequestedPoints() const {
     //    printf ("   Magnetic Field at %f, %f, %f mm  is   B= %10.10f, %10.10f, %10.10f tesla.\n", 
     //	    point[0]/mm,point[1]/mm,point[2]/mm,Bfi[0]/tesla,Bfi[1]/tesla,Bfi[2]/tesla);
     printf ("  %.2f  %.2f  %.2f          %.2f  %.2f  %.2f             %.2f  %.2f  %.2f             %.2f  %.2f  %.2f\n",
-	    point[0]/CLHEP::mm, point[1]/CLHEP::mm, point[2]/CLHEP::mm,
-	    (BfiX[0]-Bfi[0])/CLHEP::gauss/delta*CLHEP::mm,  (BfiY[0]-Bfi[0])/CLHEP::gauss/delta*CLHEP::mm,  (BfiZ[0]-Bfi[0])/CLHEP::gauss/delta*CLHEP::mm,
-	    (BfiX[1]-Bfi[1])/CLHEP::gauss/delta*CLHEP::mm,  (BfiY[1]-Bfi[1])/CLHEP::gauss/delta*CLHEP::mm,  (BfiZ[1]-Bfi[1])/CLHEP::gauss/delta*CLHEP::mm,
-	    (BfiX[2]-Bfi[2])/CLHEP::gauss/delta*CLHEP::mm,  (BfiY[2]-Bfi[2])/CLHEP::gauss/delta*CLHEP::mm,  (BfiZ[2]-Bfi[2])/CLHEP::gauss/delta*CLHEP::mm );
+        point[0]/CLHEP::mm, point[1]/CLHEP::mm, point[2]/CLHEP::mm,
+        (BfiX[0]-Bfi[0])/CLHEP::gauss/delta*CLHEP::mm,  (BfiY[0]-Bfi[0])/CLHEP::gauss/delta*CLHEP::mm,  (BfiZ[0]-Bfi[0])/CLHEP::gauss/delta*CLHEP::mm,
+        (BfiX[1]-Bfi[1])/CLHEP::gauss/delta*CLHEP::mm,  (BfiY[1]-Bfi[1])/CLHEP::gauss/delta*CLHEP::mm,  (BfiZ[1]-Bfi[1])/CLHEP::gauss/delta*CLHEP::mm,
+        (BfiX[2]-Bfi[2])/CLHEP::gauss/delta*CLHEP::mm,  (BfiY[2]-Bfi[2])/CLHEP::gauss/delta*CLHEP::mm,  (BfiZ[2]-Bfi[2])/CLHEP::gauss/delta*CLHEP::mm );
   }
 }
 
