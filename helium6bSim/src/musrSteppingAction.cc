@@ -301,14 +301,13 @@ void musrSteppingAction::UserSteppingAction(const G4Step* aStep)  {
           F04GlobalField::getObject() -> GetFieldValue(CoordinateForFieldIntegral,FieldForFieldIntegral);
 
           G4double stepLength = aStep->GetStepLength();
-
-          G4cout<<std::setprecision(10)<<CoordinateForFieldIntegral[3]<<" "<<CoordinateForFieldIntegral[0] 
+       /*   G4cout<<std::setprecision(10)<<CoordinateForFieldIntegral[3]<<" "<<CoordinateForFieldIntegral[0] 
             <<" "<<CoordinateForFieldIntegral[1]<< " " <<CoordinateForFieldIntegral[2] 	  
             <<" "<<stepLength
             <<" "<<FieldForFieldIntegral[0]/CLHEP::tesla<<" "<<FieldForFieldIntegral[1]/CLHEP::tesla
             <<" "<<FieldForFieldIntegral[2]/CLHEP::tesla
             <<" "<< ( postStepPoint->GetGlobalTime() - preStepPoint->GetGlobalTime() )*FieldForFieldIntegral[1]/CLHEP::tesla<<G4endl;
-          //	  BxIntegral += stepLength;
+        */  //	  BxIntegral += stepLength;
           //	  ByIntegral += stepLength;
           //	  BzIntegral += stepLength;
           BxIntegral += stepLength * FieldForFieldIntegral[0];
@@ -388,10 +387,6 @@ void musrSteppingAction::UserSteppingAction(const G4Step* aStep)  {
               myRootOutput->SetInitialPositronMomentum((*secondary)[i]->GetMomentum());
             }
           }
-        }
-
-        if (boolCalculateFieldIntegral)  {
-          myRootOutput->SetBFieldIntegral(BxIntegral,ByIntegral,BzIntegral,BzIntegral1,BzIntegral2,BzIntegral3);
         }
 
       }
