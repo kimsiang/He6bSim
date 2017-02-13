@@ -21,7 +21,7 @@ Now you are ready to use cmake to create a Makefile
 
 ```
 cd helium6bSim-build
-cmake ../helium6bSim-install ../helium6bSim
+cmake -DCMAKE_INSTALL_PREFIX=../helium6bSim-install ../helium6bSim
 ```
 
 Now you can build and install the code
