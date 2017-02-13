@@ -30,11 +30,17 @@ Now you can build and install the code
 make; make install
 ```
 
-To execute the simulation, simply
+Now copy over the required files and create a folder to hold the root files
 
 ```
 cd ../helium6bSim-install
 cp ../helium6bSim/101.mac ../helium6bSim/SolenoidFieldMap.txt .
+mkdir data
+```
+
+To execute the simulation, simply
+
+```
 ./bin/helium6bSim 101.mac
 ```
 
