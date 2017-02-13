@@ -33,3 +33,5 @@ To execute the simulation, simply
 cd ../helium6bSim-install
 ./bin/helium6bSim 101.mac
 ```
+
+`101.mac` is the geant4 macro you can use to change the geometry, EM fields and particle initial parameters.
