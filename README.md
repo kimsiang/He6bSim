@@ -34,6 +34,7 @@ To execute the simulation, simply
 
 ```
 cd ../helium6bSim-install
+cp ../helium6bSim/101.mac ../helium6bSim/SolenoidFieldMap.txt .
 ./bin/helium6bSim 101.mac
 ```
 
