@@ -1,0 +1,4 @@
+/vis/viewer/set/viewpointThetaPhi {theta} {phi}
+/vis/viewer/zoom 1.005
+/tracking/storeTrajectory 1
+/vis/ogl/printEPS
