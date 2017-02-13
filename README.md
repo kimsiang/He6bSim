@@ -1,6 +1,9 @@
 # He6bSim
 
-Geant4 simulation package and analysis codes for Helium 6b experiment. To run the simulation, you need to first install Geant4 with versions at least v4.10.2. To download the simulation package, under your work folder, 
+Geant4 simulation package and analysis codes for Helium 6b experiment. The simulation code is based on the musrSim
+flavor developed by physicists at PSI for muon spin rotation experiment at LEM beam line.
+
+To run the simulation, you need to first install Geant4 with versions at least v4.10.2. To download the simulation package, under your work folder, 
 
 ```
 git clone https://github.com/kimsiang/Helium6b
